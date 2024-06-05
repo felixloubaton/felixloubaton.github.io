@@ -1,0 +1,154 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    color: #333;
+    position: relative;
+    z-index: 0;
+}
+
+header {
+    height: 300px; /* Ou utilisez une valeur appropriée, comme 20vh */
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.video-banner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* Ou utilisez la même hauteur que l'en-tête */
+
+    z-index: -1;
+}
+
+.video-banner video {
+    width: 100%;
+    height: 100%; /* Ajustez selon vos besoins */
+    opacity: 0.9; /* Ajustez l'opacité pour l'effet de transparence */
+    object-fit: cover; /* Assurez-vous que la vidéo couvre toute la zone */
+}
+
+
+
+header nav {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+}
+
+header nav a {
+    color: #fff;
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 0.5em ;
+    border-radius: 5px;
+}
+
+header .hero {
+    padding: 2em 0;
+    position: relative;
+    z-index: 2;
+}
+
+header .hero .banner {
+    background-color: rgba(0, 0, 0, 0.0); /* Semi-transparent background for the banner */
+    padding: 0em;
+    border-radius: 0px;
+    display: inline-block;
+}
+
+header .hero .banner h1 {
+    margin: 0;
+    color: black;
+}
+
+main {
+    padding: 2em;
+    position: relative;
+    z-index: 1;
+    background-color: white; /* Slightly transparent background for readability */
+}
+
+.intro {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+}
+
+.intro-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.text-content {
+    max-width: 60%;
+}
+
+.intro-content .profile-photo {
+    border-radius: 50%; /* Pour une photo de profil ronde */
+    width: 200px; /* Ajuster la taille de la photo */
+    height: 200px; /* Ajuster la taille de la photo */
+    object-fit: cover;
+    margin-left: auto; /* Pour aligner la photo à droite */
+}
+
+.contact-info p {
+    margin: 0;
+}
+
+.contact-info a {
+    color: orange;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+}
+
+h2 {
+    color: #444;
+    border-bottom: 2px solid #444;
+    padding-bottom: 0.3em;
+    margin-bottom: 1em;
+    text-align: left;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    margin-bottom: 0.5em;
+}
+
+ul li a {
+    color: orange;
+    text-decoration: none;
+}
+
+ul li a:hover {
+    text-decoration: underline;
+}
+
+footer {
+    text-align: center;
+    padding: 1em 0;
+    background: #f4f4f4;
+    border-top: 1px solid #ccc;
+}
+
+footer p {
+    margin: 0;
+}
