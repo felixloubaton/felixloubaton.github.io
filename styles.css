@@ -103,6 +103,16 @@ main {
     margin-left: auto; /* Pour aligner la photo à droite */
 }
 
+
+.intro a {
+    color: #e37934;
+    text-decoration: none; /* Optionnel : supprimer le soulignement des liens */
+}
+
+.intro a:hover {
+    text-decoration: underline; /* Optionnel : ajouter un soulignement lors du survol */
+}
+
 .contact-info p {
     margin: 0;
 }
@@ -141,6 +151,8 @@ ul li a {
 ul li a:hover {
     text-decoration: underline;
 }
+
+
 
 footer {
     text-align: center;
