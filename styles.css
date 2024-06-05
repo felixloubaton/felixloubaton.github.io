@@ -1,166 +1,68 @@
-/* styles.css */
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    background-color: white;
-    color: #333;
-    position: relative;
-    z-index: 0;
-}
+<!DOCTYPE html>
+<html lang="en">
 
-header {
-    height: 300px; /* Ou utilisez une valeur appropriée, comme 20vh */
-    text-align: center;
-    position: relative;
-    z-index: 1;
-}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Félix Loubaton</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
 
-.video-banner {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%; /* Ou utilisez la même hauteur que l'en-tête */
+<body>
+    <header>
+        <div class="video-banner">
+            <video autoplay muted loop id="bg-video">
+                <source src="video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div class="hero">
+           <div class="banner">
+                <h1>Félix Loubaton </h1>
+            </div>
+                  </div>
+    </header>   
+    <main>
+         <section class="intro">
+            <div class="intro-content">
+                <div class="text-content">
+                    <div class="contact-info">
+                        <p> Max Planck Institute for Mathematics (MPIM)<br>
+                        Bonn, Germany</p>
+                        <p>Email: <a href="mailto:felix.loubaton@gmail.com">felix.loubaton@gmail.com</a></p>
+                    </div>
+                    <p>I'm currently a Postdoc at the <a href="https://www.mpim-bonn.mpg.de/"> MPIM</a>. I'm interested in higher categories, both strict and homotopic versions. Before that, I was a doctoral student at the Université de Nice Côte d'Azur, in the <a href="https://math.univ-cotedazur.fr/"> Laboratoire Jean Alexandre Dieudonné</a>, under the supervision of <a href="https://math.univ-cotedazur.fr/~carlos/">Carlos Simpson</a> and <a href="https://cisinski.app.uni-regensburg.de/">Denis-Charles Cisinski</a>.</p>
+                </div>
+                <img src="photo.jpg" alt="Félix Loubaton" class="profile-photo">
+            </div>
+        </section>
 
-    z-index: -1;
-}
+        <section class="publications">
+            <h2>Publications</h2>
+            <ul>
+                <li><a href="https://arxiv.org/pdf/2102.04281">Conditions de Kan sur les nerfs des ω-catégories</a>, Bulletin de la SMF, volume 151, pages 331-406, 2023</li>
+            </ul>
+        </section>
 
-.video-banner video {
-    width: 100%;
-    height: 100%; /* Ajustez selon vos besoins */
-    opacity: 1; /* Ajustez l'opacité pour l'effet de transparence */
-    object-fit: cover; /* Assurez-vous que la vidéo couvre toute la zone */
-}
+        <section class="prepublications">
+            <h2>Prepublications</h2>
+            <ul>
+                <li><a href="https://arxiv.org/abs/2404.14509">A model for the coherent walking ω-equivalence</a>, with Amar Hadzihasanovic, Viktoriya Ozornova, and Martina Rovelli, 2024</li>
+                <li><a href="https://arxiv.org/pdf/2207.08504.pdf">n-Complicial sets as a model of (∞,n)-categories</a>, 2024</li>
+                <li><a href="https://arxiv.org/pdf/2301.11424.pdf">An inductive model structure for strict ∞-categories</a>, with Simon Henry, 2023</li>
+                <li><a href="https://arxiv.org/pdf/2203.11845.pdf">Dualities in the complicial model of ∞-categories</a>, 2022</li>
+            </ul>
+        </section>
 
+        <section class="miscellaneous">
+            <h2>Miscellaneous</h2>
+            <ul>
+                <li><a href="https://arxiv.org/pdf/2307.11931">Theory and models of (∞,ω)-categories</a>, PhD thesis, 2023.</li>
+            </ul>
+        </section>
+    </main>
 
+  
+</body>
 
-header nav {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 2;
-}
-
-header nav a {
-    color: #fff;
-    text-decoration: none;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 0.5em ;
-    border-radius: 5px;
-}
-
-header .hero {
-    padding: 2em 0;
-    position: relative;
-    z-index: 2;
-}
-
-header .hero .banner {
-    background-color: rgba(0, 0, 0, 0.0); /* Semi-transparent background for the banner */
-    padding: 0em;
-    border-radius: 0px;
-    display: inline-block;
-}
-
-header .hero .banner h1 {
-    margin: 0;
-    color: #e37934;
-}
-
-main {
-    padding: 2em;
-    position: relative;
-    z-index: 1;
-    background-color: white; /* Slightly transparent background for readability */
-}
-
-.intro {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    text-align: left;
-}
-
-.intro-content {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    width: 100%;
-}
-
-.text-content {
-    max-width: 60%;
-}
-
-.intro-content .profile-photo {
-    border-radius: 50%; /* Pour une photo de profil ronde */
-    width: 200px; /* Ajuster la taille de la photo */
-    height: 200px; /* Ajuster la taille de la photo */
-    object-fit: cover;
-    margin-left: auto; /* Pour aligner la photo à droite */
-}
-
-
-.intro a {
-    color: #e37934;
-    text-decoration: none; /* Optionnel : supprimer le soulignement des liens */
-}
-
-.intro a:hover {
-    text-decoration: underline; /* Optionnel : ajouter un soulignement lors du survol */
-}
-
-.contact-info p {
-    margin: 0;
-}
-
-.contact-info a {
-    color: #e37934;
-    text-decoration: none;
-}
-
-.contact-info a:hover {
-    text-decoration: underline;
-}
-
-h2 {
-    color: #444;
-    border-bottom: 2px solid #444;
-    padding-bottom: 0.3em;
-    margin-bottom: 1em;
-    text-align: left;
-}
-
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-ul li {
-    margin-bottom: 0.5em;
-}
-
-ul li a {
-    color: #e37934;
-    text-decoration: none;
-}
-
-ul li a:hover {
-    text-decoration: underline;
-}
-
-
-
-footer {
-    text-align: center;
-    padding: 1em 0;
-    background: #f4f4f4;
-    border-top: 1px solid #ccc;
-}
-
-footer p {
-    margin: 0;
-}
+</html>
