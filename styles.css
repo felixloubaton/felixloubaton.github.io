@@ -30,7 +30,7 @@ header {
 .video-banner video {
     width: 100%;
     height: 100%; /* Ajustez selon vos besoins */
-    opacity: 0.9; /* Ajustez l'opacité pour l'effet de transparence */
+    opacity: 1; /* Ajustez l'opacité pour l'effet de transparence */
     object-fit: cover; /* Assurez-vous que la vidéo couvre toute la zone */
 }
 
