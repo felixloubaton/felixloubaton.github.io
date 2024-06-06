@@ -1,4 +1,4 @@
-/* styles.css */
+/* MERCI BEN JAOMINF TERRISS*/
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
@@ -71,10 +71,36 @@ header .hero .banner h1 {
 
 main {
     padding: 2em;
+
     position: relative;
     z-index: 1;
     background-color: white; /* Slightly transparent background for readability */
 }
+
+.centered-text {
+    max-width: 1200px;
+    margin: 0 auto; /* Center the text block horizontally */
+    text-align: center; /* Center the text within the block */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+.centered-video {
+    max-width: 1600px;
+    margin: 0 auto; /* Center the text block horizontally */
+    text-align: center; /* Center the text within the block */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+
+container {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
 .intro {
     display: flex;
