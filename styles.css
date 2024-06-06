@@ -80,7 +80,7 @@ main {
 .centered-text {
     max-width: 1200px;
     margin: 0 auto; /* Center the text block horizontally */
-    text-align: center; /* Center the text within the block */
+    text-align: left; /* Center the text within the block */
     overflow-wrap: break-word;
     word-wrap: break-word;
     hyphens: auto;
