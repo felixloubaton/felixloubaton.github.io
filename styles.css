@@ -1,4 +1,4 @@
-/* MERCI BEN JAOMINF TERRISS*/
+/* styles.css */
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
@@ -11,7 +11,7 @@ body {
 }
 
 header {
-    height: 300px; /* Ou utilisez une valeur appropriée, comme 20vh */
+    height: 300px;
     text-align: center;
     position: relative;
     z-index: 1;
@@ -22,19 +22,16 @@ header {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%; /* Ou utilisez la même hauteur que l'en-tête */
-
+    height: 100%;
     z-index: -1;
 }
 
 .video-banner video {
     width: 100%;
-    height: 100%; /* Ajustez selon vos besoins */
-    opacity: 1; /* Ajustez l'opacité pour l'effet de transparence */
-    object-fit: cover; /* Assurez-vous que la vidéo couvre toute la zone */
+    height: 100%;
+    object-fit: cover;
+    opacity: 1;
 }
-
-
 
 header nav {
     position: absolute;
@@ -47,7 +44,7 @@ header nav a {
     color: #fff;
     text-decoration: none;
     background-color: rgba(0, 0, 0, 0.5);
-    padding: 0.5em ;
+    padding: 0.5em;
     border-radius: 5px;
 }
 
@@ -58,49 +55,57 @@ header .hero {
 }
 
 header .hero .banner {
-    background-color: rgba(0, 0, 0, 0.0); /* Semi-transparent background for the banner */
+    background-color: rgba(0, 0, 0, 0.0);
     padding: 0em;
     border-radius: 0px;
     display: inline-block;
 }
 
-header .hero .banner h1 {
+
+header .hero .banner .name {
     margin: 0;
-    color: #e37934;
+    color: #e37934; /* Couleur orange */
+    font-size: 2em; /* Ajustez la taille de la police selon les besoins */
+    font-weight: bold;
+    position: relative;
 }
+
+header .hero .banner .name::before {
+    content: "Félix Loubaton";
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    color: black;
+    -webkit-text-stroke: 4px white; 
+    opacity: 0.8;  
+}
+
 
 main {
     padding: 2em;
-
     position: relative;
     z-index: 1;
-    background-color: white; /* Slightly transparent background for readability */
+    background-color: white;
 }
 
 .centered-text {
     max-width: 1200px;
-    margin: 0 auto; /* Center the text block horizontally */
-    text-align: left; /* Center the text within the block */
+    margin: 0 auto;
+    text-align: left;
     overflow-wrap: break-word;
     word-wrap: break-word;
     hyphens: auto;
-  }
+}
+
 .centered-video {
     max-width: 1600px;
-    margin: 0 auto; /* Center the text block horizontally */
-    text-align: center; /* Center the text within the block */
+    margin: 0 auto;
+    text-align: center;
     overflow-wrap: break-word;
     word-wrap: break-word;
     hyphens: auto;
-  }
-
-container {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+}
 
 .intro {
     display: flex;
@@ -122,21 +127,20 @@ container {
 }
 
 .intro-content .profile-photo {
-    border-radius: 50%; /* Pour une photo de profil ronde */
-    width: 200px; /* Ajuster la taille de la photo */
-    height: 200px; /* Ajuster la taille de la photo */
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
     object-fit: cover;
-    margin-left: auto; /* Pour aligner la photo à droite */
+    margin-left: auto;
 }
-
 
 .intro a {
     color: #e37934;
-    text-decoration: none; /* Optionnel : supprimer le soulignement des liens */
+    text-decoration: none;
 }
 
 .intro a:hover {
-    text-decoration: underline; /* Optionnel : ajouter un soulignement lors du survol */
+    text-decoration: underline;
 }
 
 .contact-info p {
@@ -177,8 +181,6 @@ ul li a {
 ul li a:hover {
     text-decoration: underline;
 }
-
-
 
 footer {
     text-align: center;
