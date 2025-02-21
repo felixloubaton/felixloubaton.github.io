@@ -4,4 +4,4 @@
 
 3-La clé correspond à une clé d’identification pour l’API de OpenAI. (Je ne la sauvegarde évidemment pas)
 
-5-Tout le programme est entièrement côté client (uniquement un fichier HTML + JavaScript).
+4-Tout le programme est entièrement côté client (uniquement un fichier HTML + JavaScript).
