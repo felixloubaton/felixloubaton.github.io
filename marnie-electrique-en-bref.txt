@@ -1,7 +1,14 @@
-1-Le programme découpe le texte en bloc (\begin{???} bloc \end{???}) ou (\end{!!!} \bloc \begin{???}).
+Comment utiliser :
+	•	Il faut évidemment relire le texte modifié.
+	•	GPT a tendance à ajouter des : “here is the corrected version:”. Un grep recherchant les occurrences des mots “here” et “corrected” permet souvent de nettoyer à 90 % le texte modifié.
+	•	C’est rare, mais il est parfois possible que GPT avale du texte, considérant qu’il est déjà correct, et se contente donc de dire qu’aucune modification n’était nécessaire.
 
-2-Chaque bloc est ensuite traité par gpt-4o-mini. Ainsi, plus les blocs sont longs (par exemple dans les introductions), plus la possibilité que le programme ait des comportements erratiques augmente.
-
-3-La clé correspond à une clé d’identification pour l’API de OpenAI. (Je ne la sauvegarde évidemment pas)
-
-4-Tout le programme est entièrement côté client (uniquement un fichier HTML + JavaScript).
+Fonctionnement du programme :
+	•	Le programme découpe le texte en blocs (\begin{???} bloc \end{???}) ou (\end{!!!} bloc \begin{???}).
+	•	Chaque bloc est ensuite traité par GPT-4o-mini. Ainsi, plus les blocs sont longs (par exemple dans les introductions), plus la possibilité que le programme ait des comportements erratiques augmente.
+	•	Le prompt pour l’action corriger est :
+“Copy the following text, correcting any spelling or grammatical errors and translating any French passages into English. Do not change the wording or the LaTeX commands: {bloc}.”
+	•	Le prompt pour l’action traduire est :
+“Copy the following text, translating any French passages into English. Do not change the wording or the LaTeX commands: {bloc}.”
+	•	La clé correspond à une clé d’identification pour l’API d’OpenAI. (Je ne la sauvegarde évidemment pas.)
+	•	Tout le programme est entièrement côté client (uniquement un fichier HTML + JavaScript). Il est donc tout a fait possible de telecharger la page html pour la modifier et l'adapter.
