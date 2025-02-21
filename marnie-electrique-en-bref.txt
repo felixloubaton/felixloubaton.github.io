@@ -1,0 +1,7 @@
+1-Le programme découpe le texte en bloc (\begin{???} bloc \end{???}) ou (\end{!!!} \bloc \begin{???}).
+
+2-Chaque bloc est ensuite traité par gpt-4o-mini. Ainsi, plus les blocs sont longs (par exemple dans les introductions), plus la possibilité que le programme ait des comportements erratiques augmente.
+
+3-La clé correspond à une clé d’identification pour l’API de OpenAI. (Je ne la sauvegarde évidemment pas)
+
+5-Tout le programme est entièrement côté client (uniquement un fichier HTML + JavaScript).
