@@ -18,7 +18,7 @@ Fonctionnement du programme :
 “Copy the following text, correcting any spelling or grammatical errors and translating any French passages into English. Do not change the wording or the LaTeX commands: {bloc}.”
 
 ** Le prompt pour l’action traduire est :
-“Copy the following text, translating any French passages into English. Do not change the wording or the LaTeX commands: {bloc}.”
+“Recopie le texte suivant, en le traduisant ${sourceLang} vers ${targetLang}. Ne change pas la formulation ou les commandes latex : ${text}` {bloc}.”
 
 ** La clé correspond à une clé d’identification pour l’API d’OpenAI. (Je ne la sauvegarde évidemment pas.)
 
