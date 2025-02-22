@@ -25,8 +25,6 @@
       text-align: right; /* Aligner le texte à droite */
       margin-right: 30px; /* Ajouter un peu d'espace entre le texte et le bord droit */
       margin-bottom: 20px;  /* Espace entre le texte et le bord inférieur */
-
-
     }
     .main-container {
       max-width: 2000px;
@@ -70,10 +68,24 @@
     /* Boutons en bas (Corriger / Traduire / Stop) */
     .bottom-buttons {
       display: flex;
-      justify-content: center;
-      gap: 20px;
+      align-items: center;
+      gap: 10px;
       margin: 20px 0 10px 0;
+      flex-wrap: wrap;  /* pour éviter que ça déborde si trop étroit */
     }
+    /* Conteneur pour Corriger/Traduire + inputs au centre */
+    .centered-actions {
+      display: flex;
+      justify-content: center; 
+      align-items: center;
+      flex-grow: 1;    /* prend l’espace dispo et permet de centrer */
+      gap: 10px;
+    }
+    /* Bouton Stop à droite */
+    .stop-button {
+      margin-left: auto;  /* le pousse complètement à droite */
+    }
+
     .bottom-buttons button {
       background: #000;
       color: #fff;
@@ -121,13 +133,12 @@
       cursor: pointer;
       font-size: 0.9em;
       border: 2px solid #000 !important;
-
     }
     #btn-clear:hover, #btn-copy:hover {
       background: #333;
     }
 
-    /* Style actif (Corriger/Traduire) : fond blanc, texte noir, petite bordure noire */
+    /* Style actif (Corriger/Traduire) : fond blanc, texte noir, bordure noire */
     .active-button {
       background: #fff !important;
       color: #000 !important;
@@ -157,6 +168,14 @@
     p {
       margin: 5px 0 0 0;
     }
+
+    /* Taille des inputs de langue */
+    .lang-input {
+      width: 90px;
+      padding: 5px;
+      font-size: 1em;
+      border: 1px solid #000;
+    }
   </style>
 </head>
 <body>
@@ -167,7 +186,6 @@
     <div class="column">
       <div class="col-header header-row">
         <span>Texte original</span>
-        <!-- Remplacez "Coller" par "Clear" -->
         <button id="btn-clear">Clear</button>
       </div>
       <div id="editor" class="codemirror-box"></div>
@@ -183,11 +201,20 @@
     </div>
   </div>
 
-  <!-- Boutons Corriger / Traduire / Stop -->
+  <!-- Barre du bas : Corriger + Traduire (et inputs) au centre, Stop à droite -->
   <div class="bottom-buttons">
-    <button id="btn-corriger">Corriger</button>
-    <button id="btn-traduire">Traduire</button>
-    <button id="btn-stop">Stop</button>
+
+    <!-- Zone centrée pour Corriger, Traduire et champs de langue -->
+    <div class="centered-actions">
+      <button id="btn-corriger">Corriger</button>
+      <button id="btn-traduire">Traduire</button>
+      <input type="text" id="source-language" class="lang-input" value="du français" />
+      <span>vers</span>
+      <input type="text" id="target-language" class="lang-input" value="l'anglais" />
+    </div>
+
+    <!-- Bouton Stop, poussé à droite -->
+    <button id="btn-stop" class="stop-button">Stop</button>
   </div>
 
   <!-- Barre de progression -->
@@ -220,6 +247,10 @@ const btnStop = document.getElementById("btn-stop");
 // Bouton Copier / Clear
 const btnCopy = document.getElementById("btn-copy");
 const btnClear = document.getElementById("btn-clear");
+
+// Champs langues source/cible
+const sourceLangInput = document.getElementById("source-language");
+const targetLangInput = document.getElementById("target-language");
 
 // Pour gérer l'état actif (fond blanc, texte noir, bordure) des boutons
 let activeButton = null;      // pour Corriger/Traduire
@@ -354,12 +385,13 @@ function parseLatexBlocks(latexCode) {
   return blocks;
 }
 
-async function processBlockAPI(apiKey, text, action) {
+async function processBlockAPI(apiKey, text, action, sourceLang, targetLang) {
   let prompt;
   if (action === "corriger") {
-    prompt = `Copy the following text, correcting any spelling or grammatical errors and translating any French passages into English if needed. Do not change the wording or the latex commands: ${text}`;
+    prompt = `Copy the following text, correcting any spelling or grammatical errors if needed, and translating any French passages into English if needed. Do not change the wording or the latex commands: ${text}`;
   } else if (action === "traduire") {
-    prompt = `Copy the following text, translating any French passages into English. Do not change the wording or the latex commands: ${text}`;
+    // On utilise la langue source et la langue cible saisies par l’utilisateur
+    prompt = `Recopie le texte suivant, en le traduisant ${sourceLang} vers ${targetLang}. Ne change pas la formulation ou les commandes latex : ${text}`;
   } else {
     prompt = text;
   }
@@ -368,7 +400,8 @@ async function processBlockAPI(apiKey, text, action) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${apiKey}`
+      // Remplacez les backticks par une concaténation
+      "Authorization": "Bearer " + apiKey 
     },
     body: JSON.stringify({
       model: "gpt-4o-mini", // ou "gpt-4"
@@ -400,6 +433,10 @@ async function processLatex(action) {
     return;
   }
 
+  // Récupère les langues choisies
+  const sourceLang = sourceLangInput.value.trim();
+  const targetLang = targetLangInput.value.trim();
+
   const blocks = parseLatexBlocks(latexCode);
   totalBlocks = blocks.length;
   processedBlocks = 0;
@@ -412,7 +449,7 @@ async function processLatex(action) {
 
     let result;
     try {
-      result = await processBlockAPI(apiKey, block.content, action);
+      result = await processBlockAPI(apiKey, block.content, action, sourceLang, targetLang);
     } catch (err) {
       result = `\\textbf{Erreur : ${err.message}}\n\\textbf{Contenu original :}\n${block.content}`;
     }
@@ -455,7 +492,9 @@ function updateProgress() {
   } else {
     bar.value = 0;
     label.textContent = `Bloc traité : 0 / 0`;
-}}
+  }
+}
+
 /* ---------------------------------------------------------------------
    EVENT LISTENERS
    --------------------------------------------------------------------- */
@@ -499,13 +538,11 @@ document.getElementById("openai-key").addEventListener("input", (ev) => {
   }
 });
 </script>
+
 <p class="light-grey">
-      <a href="https://felixloubaton.github.io/marnie-electrique-en-bref.txt" target="_blank" style="color: #000;">
-        <B> En bref </B>
-      </a>
-    </p>
-
+  <a href="https://felixloubaton.github.io/marnie-electrique-en-bref.txt" target="_blank" style="color: #000;">
+    <b>En bref</b>
+  </a>
+</p>
 </body>
-
-
 </html>
