@@ -386,26 +386,27 @@ function parseLatexBlocks(latexCode) {
 }
 
 async function processBlockAPI(apiKey, text, action, sourceLang, targetLang) {
-  let prompt;
+  let systemMessage;
   if (action === "corriger") {
-    prompt = `Copy the following text, correcting any spelling or grammatical errors if needed, and translating any French passages into English if needed. Do not change the wording or the latex commands: ${text}`;
+    systemMessage = "You are a LaTeX proofreading assistant. The user sends you a LaTeX text, and you must rewrite it while correcting any spelling or grammatical errors it may have, and translating the French passages into English. You do not modify any LaTeX commands or macros. You send back the corrected text without any comments and without adding any line breaks. You stay as close as possible to the original wording.";
   } else if (action === "traduire") {
-    // On utilise la langue source et la langue cible saisies par l’utilisateur
-    prompt = `Recopie le texte suivant, en le traduisant ${sourceLang} vers ${targetLang}. Ne change pas la formulation ou les commandes latex : ${text}`;
-  } else {
-    prompt = text;
+    systemMessage = `You are a LaTeX proofreading translator. The user sends you a LaTeX text, and you must rewrite it while correcting any spelling or grammatical errors it may have, and translating from "${sourceLang}" to "${targetLang}". You do not modify any LaTeX commands or macros. You send back the corrected text without any comments and without adding any line breaks. You stay as close as possible to the original wording.`;
   }
+
+  const prompt = text; // L'utilisateur envoie juste le texte, pas de modifications supplémentaires
 
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      // Remplacez les backticks par une concaténation
-      "Authorization": "Bearer " + apiKey 
+      "Authorization": "Bearer " + apiKey
     },
     body: JSON.stringify({
       model: "gpt-4o-mini", // ou "gpt-4"
-      messages: [{ role: "user", content: prompt }],
+      messages: [
+        { role: "system", content: systemMessage },
+        { role: "user", content: prompt }
+      ],
       temperature: 0.7
     })
   });
