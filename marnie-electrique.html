@@ -356,32 +356,63 @@ function clearOriginalText() {
    --------------------------------------------------------------------- */
 function parseLatexBlocks(latexCode) {
   const blocks = [];
-  const pattern = /\\begin\{([^}]+)\}(.*?)\\end\{\1\}/gs;
+
+  // Liste des environnements à NE PAS capturer (ils resteront dans le plain text)
+  const exceptions = ['tikzcd', 'array', 'equation', 'enumerate', 'itemize'];
+
+  // Expression régulière pour capturer les environnements
+  // qui ne sont PAS dans la liste d'exceptions.
+  //
+  // - On cherche : \begin{X} ... \end{X}
+  // - On utilise (?!...) pour faire un "negative lookahead" : 
+  //   cela exclut précisément les noms figurant dans "exceptions".
+  //
+  // Remarquez qu'on autorise n'importe quel autre nom d'environnement
+  // via [^}]+, tant qu'il n'apparaît pas dans (tikzcd|array|equation|enumerate|itemize).
+  const pattern = new RegExp(
+    String.raw`\\begin\{((?!${exceptions.join('|')})[^}]+)\}(.*?)\\end\{\1\}`,
+    'gs'
+  );
+
   let lastIndex = 0;
   let match;
 
   while ((match = pattern.exec(latexCode)) !== null) {
     const start = match.index;
     const end = pattern.lastIndex;
+
+    // Récupération de l'environnement et de son contenu
+    const envName = match[1];
+    const envContent = match[2];
+
+    // Tout le texte entre lastIndex et le début de l'environnement
+    // sera du "plain text"
     if (start > lastIndex) {
-      const plainText = latexCode.slice(lastIndex, start).trim();
-      if (plainText) {
-        blocks.push({ type: "plain", content: plainText });
+      const plainText = latexCode.slice(lastIndex, start);
+      if (plainText.trim()) {
+        blocks.push({ type: 'plain', content: plainText });
       }
     }
-    const envName = match[1];
-    const envContent = match[2].trim();
-    blocks.push({ type: "env", env: envName, content: envContent });
+
+    // On ajoute le bloc pour l'environnement détecté
+    blocks.push({
+      type: 'env',
+      env: envName,
+      content: envContent.trim()
+    });
+
+    // On met à jour lastIndex pour la suite
     lastIndex = end;
   }
 
-  // Reste du texte
+  // S'il reste du texte après le dernier bloc capturé, on le met en plain text
   if (lastIndex < latexCode.length) {
-    const plainText = latexCode.slice(lastIndex).trim();
-    if (plainText) {
-      blocks.push({ type: "plain", content: plainText });
+    const plainText = latexCode.slice(lastIndex);
+    if (plainText.trim()) {
+      blocks.push({ type: 'plain', content: plainText });
     }
   }
+
   return blocks;
 }
 
