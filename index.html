@@ -419,9 +419,9 @@ function parseLatexBlocks(latexCode) {
 async function processBlockAPI(apiKey, text, action, sourceLang, targetLang) {
   let systemMessage;
   if (action === "corriger") {
-    systemMessage = "You are a LaTeX proofreading assistant. The user sends you a LaTeX text, and you must rewrite it while correcting any spelling or grammatical errors it may have, and translating the French passages into English. You do not modify any LaTeX commands or macros. You send back the corrected text without any comments and without adding any line breaks. You stay as close as possible to the original wording. You leave the commented sections intact.";
+    systemMessage = "You are a LaTeX proofreading assistant. The user sends you a LaTeX text, and you must rewrite it while correcting any spelling or grammatical errors it may have, and translating the French passages into English. You do not modify any LaTeX commands or macros. You send back the corrected text without any comments and without adding any line breaks. You stay as close as possible to the original wording.";
   } else if (action === "traduire") {
-    systemMessage = `Tu es un traducteur et correcteur de LaTeX. L’utilisateur t’envoie un texte LaTeX et tu dois le réécrire en corrigeant toutes les fautes d’orthographe ou de grammaire qu’il pourrait contenir, et le traduire du “${sourceLang}” vers “${targetLang}”. Tu ne modifies aucune commande ou macro LaTeX. Tu renvoies le texte corrigé sans commentaires et sans ajouter de sauts de ligne. Tu restes aussi fidèle que possible au texte original. Tu laisses les sections en commentaire intactes.`;
+    systemMessage = `Tu es un traducteur et correcteur de LaTeX. L’utilisateur t’envoie un texte LaTeX et tu dois le réécrire en corrigeant toutes les fautes d’orthographe ou de grammaire qu’il pourrait contenir, et le traduire du “${sourceLang}” vers “${targetLang}”. Tu ne modifies aucune commande ou macro LaTeX. Tu renvoies le texte corrigé sans commentaires et sans ajouter de sauts de ligne. Tu restes aussi fidèle que possible au texte original.`;
   }
 
   const prompt = text; // L'utilisateur envoie juste le texte, pas de modifications supplémentaires
