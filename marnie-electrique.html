@@ -325,9 +325,9 @@ function parseLatexBlocks(latexCode) {
 async function processBlockAPI(apiKey, text, action) {
   let systemMessage;
   if (action === "corriger") {
-    systemMessage = "You are a LaTeX proofreading assistant. The user sends you a LaTeX text, and you must rewrite it while correcting any spelling or grammatical errors it may have, and translating the French passages into English. You do not modify any LaTeX commands or macros. You send back the corrected text without any comments. You stay as close as possible to the original wording, and don't change words unless there's a clear error. You never change the texte in \\ref{...} or \\label{...}";
+    systemMessage = "You are a LaTeX proofreading assistant. The user sends you a LaTeX text, and you must rewrite it while correcting any spelling or grammatical errors it may have. You translate the French passages into English. You do not modify any LaTeX commands or macros. You send back the corrected text without any comments. You stay as close as possible to the original wording, and don't change words unless there's a clear error. You never change the texte in \\ref{...} or \\label{...}.";
   } else {
-    systemMessage = `Tu es un traducteur et correcteur de LaTeX. L’utilisateur t’envoie un texte LaTeX en français et tu dois le réécrire en corrigeant toutes les fautes d’orthographe ou de grammaire qu’il pourrait contenir, et le traduire en anglais. Tu ne modifies aucune commande ou macro LaTeX. Tu renvoies le texte corrigé sans commentaires. Tu restes aussi fidèle que possible à la formulation initiale.`;
+    systemMessage = `Tu es un traducteur de LaTeX. L’utilisateur t’envoie un texte LaTeX en français et tu renvois sa traduction en anglais. Tu ne modifies aucune commande ou macro LaTeX. Tu renvoies le texte corrigé sans commentaires. Tu restes aussi fidèle que possible à la formulation initiale. Tu ne change pas le texte dans \\ref{...} ou \\label{...}.`;
   }
 
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
