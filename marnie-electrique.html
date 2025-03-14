@@ -179,7 +179,7 @@
 <div class="main-container">
 
   <div class="columns">
-    <!-- On supprime le bouton Clear -->
+    <!-- Colonne gauche (Texte original) -->
     <div class="column">
       <div class="col-header header-row">
         <span>Texte original</span>
@@ -187,7 +187,7 @@
       <div id="editor" class="codemirror-box"></div>
     </div>
 
-    <!-- On supprime le bouton Copier ici (il va en bas à droite) -->
+    <!-- Colonne droite (Texte modifié) -->
     <div class="column">
       <div class="col-header header-row">
         <span>Texte modifié</span>
@@ -196,14 +196,13 @@
     </div>
   </div>
 
+  <!-- Barre du bas : Corriger/Traduire à gauche, Progression au centre, Diff/Copy à droite -->
   <div class="bottom-buttons">
-    <!-- Boutons Corriger/Traduire à gauche -->
     <div class="left-actions">
       <button id="btn-corriger">Corriger</button>
       <button id="btn-traduire">Traduire</button>
     </div>
 
-    <!-- Barre de progression + bouton Stop au centre -->
     <div class="middle-actions">
       <div id="progress-container">
         <span id="progress-label">Bloc traité : 0 / 0</span>
@@ -212,7 +211,6 @@
       </div>
     </div>
 
-    <!-- Différence et Copier à droite, côte à côte -->
     <div style="display: flex; gap: 10px; margin-left: auto;">
       <button id="btn-diff">Différence</button>
       <button id="btn-copy">Copier</button>
@@ -229,7 +227,7 @@
 
 <script>
 // -------------------------------------------------------------
-// Variables globales pour CodeMirror
+// Déclaration des variables globales
 // -------------------------------------------------------------
 let editorLeft;
 let editorRight;
@@ -245,10 +243,10 @@ const btnDiff = document.getElementById("btn-diff");
 const btnStop = document.getElementById("btn-stop");
 const btnCopy = document.getElementById("btn-copy");
 
-// Input pour la clé
+// Champ de clé
 const openaiKeyInput = document.getElementById("openai-key");
 
-// État des boutons actifs
+// État actif
 let activeButton = null;
 let copyButtonActive = false;
 
@@ -275,7 +273,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 /* ---------------------------------------------------------------------
-   FONCTIONS : Gérer l'état actif des boutons
+   GESTION DES ETATS (Boutons)
    --------------------------------------------------------------------- */
 function setButtonActive(btn) {
   if (activeButton) {
@@ -287,7 +285,6 @@ function setButtonActive(btn) {
   activeButton = btn;
   btn.classList.add("active-button");
 }
-
 function revertActiveButton() {
   if (activeButton) {
     activeButton.classList.remove("active-button");
@@ -311,7 +308,6 @@ function revertCopyButtonActive() {
     copyButtonActive = false;
   }
 }
-
 async function copyModifiedText() {
   try {
     const text = editorRight.getValue();
@@ -323,7 +319,7 @@ async function copyModifiedText() {
 }
 
 /* ---------------------------------------------------------------------
-   AFFICHER / CACHER BARRE DE PROGRESSION ET BOUTON STOP
+   AFFICHER/CACHER BARRE DE PROGRESSION
    --------------------------------------------------------------------- */
 function showProgressUI() {
   document.getElementById("progress-container").style.display = "flex";
@@ -335,11 +331,13 @@ function hideProgressUI() {
 }
 
 /* ---------------------------------------------------------------------
-   PARSING DES BLOCS LaTeX
+   PARSING DES BLOCS LaTeX : On stocke leadingNewlines si le contenu commence par un saut de ligne
    --------------------------------------------------------------------- */
 function parseLatexBlocks(latexCode) {
   const blocks = [];
   const exceptions = ['tikzcd', 'array', 'equation', 'enumerate', 'itemize'];
+
+  // Regex : \begin{env}... \end{env} en excluant exceptions
   const pattern = new RegExp(
     String.raw`\\begin\{((?!${exceptions.join('|')})[^}]+)\}(.*?)\\end\{\1\}`,
     'gs'
@@ -350,23 +348,43 @@ function parseLatexBlocks(latexCode) {
 
   while ((match = pattern.exec(latexCode)) !== null) {
     const start = match.index;
-    const end = pattern.lastIndex;
-    const envName = match[1];
-    const envContent = match[2];
+    const end   = pattern.lastIndex;
 
+    const envName = match[1];
+    let envContent = match[2]; // tout ce qu'il y a entre \begin{...} et \end{...}
+
+    // On regarde si ce contenu commence par un ou plusieurs sauts de ligne + espaces
+    // leadingText contiendra par ex "\n", "\n\n", "  \n", etc.
+    const leading = envContent.match(/^([\s\r?\n]+)/);
+    let leadingText = "";
+    if (leading) {
+      leadingText = leading[0]; // ex. "\n" ou "  \n"
+      // On enlève ces caractères du début
+      envContent = envContent.slice(leadingText.length);
+    }
+
+    // Si on a du texte "plain" avant l'env
     if (start > lastIndex) {
       const plainText = latexCode.slice(lastIndex, start);
       if (plainText.trim()) {
         blocks.push({ type: 'plain', content: plainText });
       }
     }
+
+    // On mémorise le reste
     blocks.push({
       type: 'env',
       env: envName,
-      content: envContent.trim()
+      // On fait un trim() ici si vous le souhaitez (pour enlever espaces fin)
+      content: envContent.trim(),
+      // leadingNewlines stocke les éventuels sauts de ligne
+      leadingNewlines: leadingText
     });
+
     lastIndex = end;
   }
+
+  // Texte après le dernier bloc capturé
   if (lastIndex < latexCode.length) {
     const plainText = latexCode.slice(lastIndex);
     if (plainText.trim()) {
@@ -377,13 +395,14 @@ function parseLatexBlocks(latexCode) {
 }
 
 /* ---------------------------------------------------------------------
-   APPEL API OPENAI (toujours FR->EN pour traduire)
+   APPEL API OPENAI : FR->EN pour "traduire"
    --------------------------------------------------------------------- */
 async function processBlockAPI(apiKey, text, action) {
   let systemMessage;
   if (action === "corriger") {
-    systemMessage = "You are a LaTeX proofreading assistant. The user sends you a LaTeX text, and you must rewrite it while correcting any spelling or grammatical errors it may have, and translating the French passages into English. You do not modify any LaTeX commands or macros. You send back the corrected text without any comments. You stay as close as possible to the original wording, and don't change words unless there's a clear error.";
-  } else if (action === "traduire") {
+    systemMessage = "You are a LaTeX proofreading assistant. The user sends you a LaTeX text, and you must rewrite it while correcting any spelling or grammatical errors it may have, and translating the French passages into English. You do not modify any LaTeX commands or macros. You send back the corrected text without any comments. You stay as close as possible to the original wording, and don't change words unless there's a clear error. You never change the texte in \\ref{...} or \\label{...}";
+  } else {
+    // "traduire"
     systemMessage = `Tu es un traducteur et correcteur de LaTeX. L’utilisateur t’envoie un texte LaTeX en français et tu dois le réécrire en corrigeant toutes les fautes d’orthographe ou de grammaire qu’il pourrait contenir, et le traduire en anglais. Tu ne modifies aucune commande ou macro LaTeX. Tu renvoies le texte corrigé sans commentaires. Tu restes aussi fidèle que possible à la formulation initiale.`;
   }
 
@@ -412,25 +431,24 @@ async function processBlockAPI(apiKey, text, action) {
 }
 
 /* ---------------------------------------------------------------------
-   PROCESS (Corriger / Traduire) + GESTION DU SCROLL
+   PROCESS (Corriger / Traduire)
    --------------------------------------------------------------------- */
 async function processLatex(action) {
   stopRequested = false;
 
   const apiKey = openaiKeyInput.value.trim();
   if (!apiKey) {
-    alert("Clé OpenAI nécéssaire.");
+    alert("Clé OpenAI requise.");
     return;
   }
 
   const latexCode = editorLeft.getValue().trim();
   if (!latexCode) {
-    alert("Aucun texte à traiter");
+    alert("Rien à traiter.");
     return;
   }
 
-
-    // ***** Vider l'éditeur de droite immédiatement *****
+  // Vider l'éditeur de droite avant de commencer
   editorRight.setValue("");
 
   const blocks = parseLatexBlocks(latexCode);
@@ -452,13 +470,17 @@ async function processLatex(action) {
         result = `\\textbf{Erreur : ${err.message}}\n\\textbf{Contenu original :}\n${block.content}`;
       }
 
+      // Reconstruction
       let textToInsert;
-      if (block.type === "plain") {
+      if (block.type === 'plain') {
         textToInsert = result;
       } else {
-        textToInsert = `\\begin{${block.env}}\n${result}\n\\end{${block.env}}`;
+        // Réinjecter les éventuels sauts de ligne initiaux
+        const leadingNL = block.leadingNewlines || "";
+        textToInsert = `\\begin{${block.env}}${leadingNL}${result}\n\\end{${block.env}}`;
       }
 
+      // Actualiser l'éditeur de droite
       const scrollInfo = editorRight.getScrollInfo();
       finalText += textToInsert + "\n\n";
       editorRight.setValue(finalText);
@@ -467,6 +489,7 @@ async function processLatex(action) {
       processedBlocks++;
       updateProgress();
 
+      // Petite pause
       await new Promise(resolve => setTimeout(resolve, 500));
     }
   } finally {
@@ -486,7 +509,9 @@ function stopProcessing() {
   revertActiveButton();
 }
 
-/** Mise à jour barre de progression */
+/* ---------------------------------------------------------------------
+   MISE À JOUR BARRE DE PROGRESSION
+   --------------------------------------------------------------------- */
 function updateProgress() {
   const label = document.getElementById("progress-label");
   const bar = document.getElementById("progress-bar");
@@ -509,7 +534,7 @@ function showDiff() {
 
   const diffWindow = window.open("", "_blank");
   if (!diffWindow) {
-    alert("Autorisez les pop-ups pour voir la différence entre le texte initial et le texte modifié.");
+    alert("Pop-up bloquée. Autorisez les pop-ups pour voir la différence.");
     return;
   }
 
@@ -522,9 +547,6 @@ function showDiff() {
         body {
           font-family: sans-serif;
           margin: 20px;
-        }
-        h2 {
-          margin-bottom: 10px;
         }
         .diff-line {
           white-space: pre-wrap;
@@ -541,6 +563,7 @@ function showDiff() {
       </style>
     </head>
     <body>
+      <h2>Différence entre le texte original et le texte modifié</h2>
       <div id="diff-container"></div>
     </body>
     </html>
@@ -565,7 +588,7 @@ function showDiff() {
   diffWindow.document.getElementById("diff-container").innerHTML = diffHtml;
 }
 
-/** Échappe les caractères spéciaux HTML */
+/* Échappe les caractères spéciaux HTML */
 function escapeHtml(str) {
   return str
     .replace(/&/g, "&amp;")
@@ -598,7 +621,7 @@ btnDiff.addEventListener("click", showDiff);
 btnStop.addEventListener("click", stopProcessing);
 btnCopy.addEventListener("click", copyModifiedText);
 
-/* Gérer la couleur rouge->vert du champ clé */
+/* Gère la couleur rouge->vert de la clé */
 openaiKeyInput.addEventListener("input", (ev) => {
   const val = ev.target.value.trim();
   if (val.length > 0) {
