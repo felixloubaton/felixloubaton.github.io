@@ -133,8 +133,11 @@
 
   <div class="bottom-buttons">
     <div class="left-actions">
-      <button id="btn-corriger">Corriger</button>
-      <button id="btn-traduire">Traduire</button>
+      <button id="btn-corriger">Correction</button>
+      <!-- Bouton renommé en "Traduire F-->
+       <button id="btn-traduire">Thème</button>
+      <!-- Nouveau bouton "Traduire A->F" -->
+      <button id="btn-traduire-af">Version</button>
     </div>
 
     <div class="middle-actions">
@@ -174,7 +177,8 @@ let globalRunId = 0;
 
 // Boutons
 const btnCorriger = document.getElementById("btn-corriger");
-const btnTraduire = document.getElementById("btn-traduire");
+const btnTraduire = document.getElementById("btn-traduire");     // F-->A
+const btnTraduireAF = document.getElementById("btn-traduire-af"); // A->F
 const btnDiff = document.getElementById("btn-diff");
 const btnStop = document.getElementById("btn-stop");
 const btnCopy = document.getElementById("btn-copy");
@@ -324,10 +328,20 @@ function parseLatexBlocks(latexCode) {
    ------------------------------------------------------------ */
 async function processBlockAPI(apiKey, text, action) {
   let systemMessage;
+
   if (action === "corriger") {
-    systemMessage = "You are a LaTeX proofreading assistant. The user sends you a LaTeX text, and you must rewrite it while correcting any spelling or grammatical errors it may have. You translate the French passages into English. You do not modify any LaTeX commands or macros. You send back the corrected text without any comments. You stay as close as possible to the original wording, and don't change words unless there's a error. You never change the texte in \\ref{...} or \\label{...}. You singularize what comes after a “for any”.";
-  } else {
-    systemMessage = `Tu es un traducteur de LaTeX. L’utilisateur t’envoie un texte LaTeX en français et tu renvoies sa traduction en anglais. Tu ne modifies aucune commande ou macro LaTeX. Tu renvoies le texte corrigé sans commentaires. Tu restes aussi fidèle que possible à la formulation initiale. Tu ne changes pas le texte dans \\ref{…} ou \\label{…}.`;
+    systemMessage = 
+      "You are a LaTeX proofreading assistant. The user sends you a LaTeX text, and you must rewrite it while correcting any spelling or grammatical errors it may have. You translate the French passages into English. You do not modify any LaTeX commands or macros. You send back the corrected text without any comments. You stay as close as possible to the original wording, and don't change words unless there's a error. You never change the text in \\ref{...} or \\label{...}. You singularize what comes after a “for any”.";
+  } 
+  else if (action === "traduireAF") {
+    // Traduction de l'anglais vers le français
+    systemMessage = 
+      "Tu es un traducteur de LaTeX. L’utilisateur t’envoie un texte LaTeX en anglais et tu renvoies sa traduction en français. Tu ne modifies aucune commande ou macro LaTeX. Tu renvoies le texte corrigé sans commentaires. Tu restes aussi fidèle que possible à la formulation initiale. Tu ne changes pas le texte dans \\ref{…} ou \\label{…}.";
+  }
+  else {
+    // Traduction du français vers l'anglais (F-->A)
+    systemMessage = 
+      "Tu es un traducteur de LaTeX. L’utilisateur t’envoie un texte LaTeX en français et tu renvoies sa traduction en anglais. Tu ne modifies aucune commande ou macro LaTeX. Tu renvoies le texte corrigé sans commentaires. Tu restes aussi fidèle que possible à la formulation initiale. Tu ne changes pas le texte dans \\ref{…} ou \\label{…}.";
   }
 
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -419,6 +433,7 @@ async function processLatex(action) {
       processedBlocks++;
       updateProgress();
 
+      // Petite pause entre chaque bloc
       await new Promise(r => setTimeout(r, 500));
     }
   } finally {
@@ -520,10 +535,21 @@ btnCorriger.addEventListener("click", async () => {
   }
 });
 
+// Traduction F-->A (bouton renommé)
 btnTraduire.addEventListener("click", async () => {
   setButtonActive(btnTraduire);
   try {
     await processLatex("traduire");
+  } finally {
+    revertActiveButton();
+  }
+});
+
+// Traduction A->F (nouveau bouton)
+btnTraduireAF.addEventListener("click", async () => {
+  setButtonActive(btnTraduireAF);
+  try {
+    await processLatex("traduireAF");
   } finally {
     revertActiveButton();
   }
