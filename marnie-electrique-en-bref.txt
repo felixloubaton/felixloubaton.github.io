@@ -2,9 +2,13 @@ Comment utiliser :
 
 ** Il faut évidemment relire le texte modifié.
 
-** GPT a tendance à ajouter des : “here is the corrected version:”. Un Ctr+F recherchant les occurrences des mots “here” et “corrected” permet souvent de nettoyer à 90 % le texte modifié.
+** C’est rare, mais il est parfois possible que GPT avale du texte, il faut donc toujours garder une copie du document initial
 
-** C’est rare, mais il est parfois possible que GPT avale du texte, considérant qu’il est déjà correct, et se contente donc de dire qu’aucune modification n’était nécessaire.
+** Le bouton "Correction" corrige le texte. En appuyant sur le bouton "différence", un discheck permet de voir les modifications effectués.
+
+** Le bouton "Version" traduit de l'anglais en français.
+
+** Le bonton "Thème" traduit du français en anglais.
 
 
 
@@ -17,9 +21,12 @@ Fonctionnement du programme :
 ** Le message système pour l’action corriger est :
 You are a LaTeX proofreading assistant. The user sends you a LaTeX text, and you must rewrite it while correcting any spelling or grammatical errors it may have. You translate the French passages into English. You do not modify any LaTeX commands or macros. You send back the corrected text without any comments. You stay as close as possible to the original wording, and don't change words unless there's a error. You never change the texte in \\ref{...} or \\label{...}. You singularize what comes after a “for any”.
 
-** Le message système pour l'action traduire est :
+** Le message système pour l'action thème est :
 Tu es un traducteur de LaTeX. L’utilisateur t’envoie un texte LaTeX en français et tu renvoies sa traduction en anglais. Tu ne modifies aucune commande ou macro LaTeX. Tu renvoies le texte corrigé sans commentaires. Tu restes aussi fidèle que possible à la formulation initiale. Tu ne changes pas le texte dans \ref{…} ou \label{…}.
 
-** La clé correspond à une clé d’identification pour l’API d’OpenAI. (Je ne la sauvegarde évidemment pas.)
+** Le message système pour l'action version est :
+Tu es un traducteur de LaTeX. L’utilisateur t’envoie un texte LaTeX en anglais et tu renvoies sa traduction en français. Tu ne modifies aucune commande ou macro LaTeX. Tu renvoies le texte corrigé sans commentaires. Tu restes aussi fidèle que possible à la formulation initiale. Tu ne changes pas le texte dans \\ref{…} ou \\label{…}.
 
-** Tout le programme est entièrement côté client (uniquement un fichier HTML + JavaScript). Il est donc tout a fait possible de telecharger la page html pour la modifier et l'adapter.
+** La clé correspond à une clé d’identification pour l’API d’OpenAI. (Je ne la sauvegarde évidemment pas.) Tout le monde peut s'en creer en allant sur le site platform.openai.com. Le prix est très bas (10 centimes pour une soixantaine de page corrigé je pense).
+
+** Tout le programme est entièrement côté client (uniquement un fichier HTML). Il est donc tout a fait possible de telecharger la page html pour la modifier et l'adapter.
