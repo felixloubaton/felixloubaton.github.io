@@ -135,9 +135,9 @@
     <div class="left-actions">
       <button id="btn-corriger">Correction</button>
       <!-- Bouton renommé en "Traduire F-->
-       <button id="btn-traduire">Thème</button>
+       <button id="btn-traduire">Thème (F>A)</button>
       <!-- Nouveau bouton "Traduire A->F" -->
-      <button id="btn-traduire-af">Version</button>
+      <button id="btn-traduire-af">Version (A>F)</button>
     </div>
 
     <div class="middle-actions">
@@ -336,12 +336,12 @@ async function processBlockAPI(apiKey, text, action) {
   else if (action === "traduireAF") {
     // Traduction de l'anglais vers le français
     systemMessage = 
-      "Tu es un traducteur de LaTeX. L’utilisateur t’envoie un texte LaTeX en anglais et tu renvoies sa traduction en français. Tu ne modifies aucune commande ou macro LaTeX. Tu renvoies le texte corrigé sans commentaires. Tu restes aussi fidèle que possible à la formulation initiale. Tu ne changes pas le texte dans \\ref{…} ou \\label{…}.";
+      "Tu es un traducteur de LaTeX. L’utilisateur t’envoie un texte LaTeX en anglais et tu renvoies sa traduction en français. Si le texte est déja en français, tu le renvois tel quel. Tu ne modifies aucune commande ou macro LaTeX. Tu renvoies le texte corrigé sans commentaires. Tu restes aussi fidèle que possible à la formulation initiale. Tu ne changes pas le texte dans \\ref{…} ou \\label{…}.";
   }
   else {
     // Traduction du français vers l'anglais (F-->A)
     systemMessage = 
-      "Tu es un traducteur de LaTeX. L’utilisateur t’envoie un texte LaTeX en français et tu renvoies sa traduction en anglais. Tu ne modifies aucune commande ou macro LaTeX. Tu renvoies le texte corrigé sans commentaires. Tu restes aussi fidèle que possible à la formulation initiale. Tu ne changes pas le texte dans \\ref{…} ou \\label{…}.";
+      "Tu es un traducteur de LaTeX. L’utilisateur t’envoie un texte LaTeX en français et tu renvoies sa traduction en anglais. Si le texte est déja en anglais, tu le renvois tel quel. Tu ne modifies aucune commande ou macro LaTeX. Tu renvoies le texte corrigé sans commentaires. Tu restes aussi fidèle que possible à la formulation initiale. Tu ne changes pas le texte dans \\ref{…} ou \\label{…}.";
   }
 
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
