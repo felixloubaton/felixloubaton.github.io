@@ -1,88 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
 
- <!DOCTYPE html>
- <html lang="en">
- 
- <head>
-     <meta name="description" content="Félix Loubaton, postdoc at the MPIM ">
-     <meta name="google-site-verification" content="WFxcEim_gG3TxMb3wQj8ZgJdC7o7ll3z49ITCptb9Wc" />
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Félix Loubaton</title>
-     <link rel="icon" href="logo.png"/>
- 
-     <link rel="stylesheet" href="styles.css">
- </head>
- 
- 
- <body>
-     <header class="centered-video">
+<head>
+    <meta name="description" content="Félix Loubaton, postdoc at the MPIM ">
+    <meta name="google-site-verification" content="WFxcEim_gG3TxMb3wQj8ZgJdC7o7ll3z49ITCptb9Wc" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Félix Loubaton</title>
+    <link rel="icon" href="logo.png"/>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+      /* Remise à zéro des marges et paddings pour le body et le html */
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Marge de 3cm en bas du bloc main pour l'espace avant la seconde vidéo */
+      main.centered-text {
+        margin-bottom: 3cm;
+      }
+
+      /* Supprime les espacements du header de la deuxième vidéo */
+      header.centered-video {
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Idem pour les containers de la vidéo */
+      .centered-video .container {
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Assure que la vidéo ne génère pas de marge additionnelle */
+      .centered-video video {
+        display: block;
+        margin: 0;
+        padding: 0;
+      }
+    .no-style-link {
+      color: inherit;        /* même couleur que le texte autour */
+      text-decoration: none; /* pas de soulignement */
+      cursor: pointer;       /* curseur main */
+    }
+  </style>
+</head>
+
+<body>
+    <header class="centered-video">
         <div class="container">
-         <div class="video-banner">
-             <video autoplay muted loop id="bg-video">
-                 <source src="video.mp4" type="video/mp4">
-             </video>
-         </div>
-         </div>
-         <div class="hero">
- 
- 
-                   </div>
-     </header>   
-     <main class="centered-text">
-         <div class="container">
-          <section class="intro">
-             <div class="intro-content">
-                 <div class="text-content">
-                     <div class="contact-info">
-                          <p><span class="name">Félix Loubaton</span></p>
-                         <p> Max Planck Institute for Mathematics (MPIM)<br>
-                         Bonn, Germany</p>
-                         <p>Email: <a href="mailto:felix.loubaton@gmail.com">felix.loubaton@gmail.com</a></p>
-                     </div>
-                     <p>I'm currently a Postdoc at the <a href="https://www.mpim-bonn.mpg.de/"> MPIM</a> under the supervision of <a href="https://people.mpim-bonn.mpg.de/viktoriya.ozornova/"> Viktoriya Ozornova</a>. I'm interested in higher categories, both strict and homotopic versions. Before that, I was a doctoral student at the Université de Nice Côte d'Azur, in the <a href="https://math.univ-cotedazur.fr/"> Laboratoire Jean Alexandre Dieudonné</a>, under the supervision of <a href="https://math.univ-cotedazur.fr/~carlos/">Carlos Simpson</a> and <a href="https://cisinski.app.uni-regensburg.de/">Denis-Charles Cisinski</a>.</p>
-                 </div>
-                 <img src="photo.jpg" alt="Félix Loubaton" class="profile-photo">
-             </div>
-         </section>
- 
-         <section class="publications">
-             <h2>Publications</h2>
-             <ul>
-                 <li><a href="https://arxiv.org/pdf/2404.14509.pdf">A model for the coherent walking ω-equivalence</a>, with Amar Hadzihasanovic, Viktoriya Ozornova and Martina Rovelli, Proceedings of the American Mathematical Society, 2024</li>
-                 <li><a href="https://arxiv.org/pdf/2301.11424.pdf">An inductive model structure for strict ∞-categories</a>, with Simon Henry, Journal of Pure and Applied Algebra,2024</li>
-                 <li><a href="https://arxiv.org/pdf/2102.04281">Conditions de Kan sur les nerfs des ω-catégories</a>, Bulletin de la SMF, volume 151, pages 331-406, 2023</li>
-             </ul>
-         </section>
- 
-         <section class="prepublications">
-             <h2>Prepublications</h2>
-             <ul>
-                 <li><a href="https://arxiv.org/pdf/2503.19242.pdf">Effectivity of generalized double ∞-categories</a>, 2025</li>
-                 <li><a href="https://arxiv.org/pdf/2406.05425.pdf">Categorical theory of (∞, ω)-categories</a>, 2024</li>
-                 <li><a href="https://arxiv.org/pdf/2207.08504.pdf">The complicial model of (∞, ω)-categories</a>, 2024</li>
- 
-                 <li><a href="https://arxiv.org/pdf/2203.11845.pdf">Dualities in the complicial model of ∞-categories</a>, 2022</li>
-             </ul>
-         </section>
- 
-         <section class="miscellaneous">
-             <h2>Miscellaneous</h2>
-             <ul>
-                 <li><a href="https://arxiv.org/pdf/2307.11931">Theory and models of (∞,ω)-categories</a>, PhD thesis, 2023.</li>
-             </ul>
-         </section>
- 
-         <section class="Student seminar">
-             <h2>Student Seminar</h2>
-             <ul>
-                   <li>During the winter semester 24-25, <a href="https://paula-verdugo.github.io/">Paula Verdugo</a> and I are organizing a student seminar on Goodwillie calculus and
-                    higher topos. See <a href="https://paula-verdugo.github.io/seminar2024-2/">here</a> for more information.</li>
- 
-             </ul>
-         </section>
-     </main>
- 
- 
- </body>
- 
- </html>
+            <div class="video-banner">
+                <video autoplay muted loop id="bg-video">
+                    <source src="video.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+        <div class="hero">
+            <!-- Contenu éventuel -->
+        </div>
+    </header>
+
+    <main class="centered-text">
+        <div class="container">
+            <section class="intro">
+                <div class="intro-content">
+                    <div class="text-content">
+                        <div class="contact-info">
+                            <p><span class="name">Félix Loubaton</span></p>
+                            <p>Max Planck Institute for Mathematics (MPIM)<br>
+                                 Bonn, <span id="germany" class="no-style-link">Germany</span>
+                            </p>
+                            <script>
+                              document.getElementById("germany").addEventListener("click", function() {
+                                // Ouvre la vidéo locale dans un nouvel onglet (ou nouvelle fenêtre)
+                                window.open("nick.mp4", "_blank");
+                              });
+                            </script>
+                            <p>Email: <a href="mailto:felix.loubaton@gmail.com">felix.loubaton@gmail.com</a></p>
+                        </div>
+                        <p>
+                            I'm currently a Postdoc at the 
+                            <a href="https://www.mpim-bonn.mpg.de/">MPI</a><a href="#" id="dynamic-link">M</a> under the supervision of 
+                            <a href="https://people.mpim-bonn.mpg.de/viktoriya.ozornova/">Viktoriya Ozornova</a>. 
+                            I'm interested in higher categories, both strict and homotopic versions. Before that, I was 
+                            a doctoral student at the Université de Nice Côte d'Azur, in the 
+                            <a href="https://math.univ-cotedazur.fr/"> Laboratoire Jean Alexandre Dieudonné</a>, 
+                            under the supervision of <a href="https://math.univ-cotedazur.fr/~carlos/">Carlos Simpson</a> 
+                            and <a href="https://cisinski.app.uni-regensburg.de/">Denis-Charles Cisinski. </a>
+                        <script>
+                          document.getElementById("dynamic-link").addEventListener("click", function(event) {
+                            event.preventDefault(); // prevent default link behavior
+
+                            const seconds = new Date().getSeconds();
+                            const imageFile = (seconds % 2 === 0) ? "art1.png" : "art2.png";
+
+                            // Open the selected image in a new tab
+                            window.open(imageFile, "_blank");
+                          });
+                        </script>
+                        </p>
+                    </div>
+                    <img src="photo.jpg" alt="Félix Loubaton" class="profile-photo">
+                </div>
+            </section>
+
+            <section class="publications">
+                <h2>Publications</h2>
+                <ul>
+                    <li><a href="https://arxiv.org/pdf/2404.14509.pdf">A model for the coherent walking ω-equivalence</a>, 
+                        with <a href="https://ioc.ee/~amar/">Amar Hadzihasanovic</a>, <a href="https://people.mpim-bonn.mpg.de/viktoriya.ozornova/">Viktoriya Ozornova</a> and <a href="https://people.math.umass.edu/~rovelli/">Martina Rovelli</a>, 
+                        Proceedings of the American Mathematical Society, 2025
+                    </li>
+                    <li><a href="https://arxiv.org/pdf/2301.11424.pdf">An inductive model structure for strict ∞-categories</a>, 
+                        with <a href="https://www.normalesup.org/~henry/">Simon Henry</a>, Journal of Pure and Applied Algebra, 2024
+                    </li>
+                    <li><a href="https://arxiv.org/pdf/2102.04281">Conditions de Kan sur les nerfs des ω-catégories</a>, 
+                        Bulletin de la SMF, volume 151, pages 331-406, 2023
+                    </li>
+                </ul>
+            </section>
+
+            <section class="prepublications">
+                <h2>Prepublications</h2>
+                <ul>
+                    <li><a href="https://arxiv.org">On the squares functor and the Gaitsgory-Rozenblyum conjectures</a>, with <a href="https://sites.google.com/view/jacoruit/home">Jaco Ruit</a>, 2025</li>
+                    <li><a href="https://arxiv.org/pdf/2406.05425.pdf">Effectivity of generalized double ∞-categories</a>, 2025</li>
+                    <li><a href="https://arxiv.org/pdf/2406.05425.pdf">Categorical theory of (∞, ω)-categories</a>, 2024</li>
+                    <li><a href="https://arxiv.org/pdf/2207.08504.pdf">The complicial model of (∞, ω)-categories</a>, 2024</li>
+                    <li><a href="https://arxiv.org/pdf/2203.11845.pdf">Dualities in the complicial model of ∞-categories</a>, 2022</li>
+                </ul>
+            </section>
+
+            <section class="miscellaneous">
+                <h2>Miscellaneous</h2>
+                <ul>
+                    <li>
+                        <a href="https://arxiv.org/pdf/2307.11931">Theory and models of (∞,ω)-categories</a>, PhD thesis, 2023.
+                    </li>
+                </ul>
+            </section>
+
+            <section class="Student seminar">
+                <h2>Abstract homotopy theory seminarr</h2>
+                <ul>
+                    <li>
+                    <a href="https://people.mpim-bonn.mpg.de/viktoriya.ozornova/">Viktoriya Ozornova</a>, <a href="https://sites.google.com/view/jacoruit/home">Jaco Ruit</a>, <a href="https://paula-verdugo.github.io/">Paula Verdugo</a>, and I are organizing an iteration of the MPIM seminar on abstract homotopy theory. More information  <a href="https://sites.google.com/view/jacoruit/aht-seminar">here</a>.
+                    </li>
+                </ul>
+            </section>
+        </div>
+    </main>
