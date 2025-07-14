@@ -277,12 +277,24 @@ function parseLatexBlocks(latexCode) {
   const blocks = [];
   const exceptions = ['tikzcd','array','equation','enumerate','itemize'];
 
+  // Chercher la première occurrence de \begin{document}
+  const beginDocRegex = /\\begin\s*\{\s*document\s*\}/i;
+  const beginDocMatch = beginDocRegex.exec(latexCode);
+  let preambleEndIndex = 0;
+
+  if (beginDocMatch) {
+    preambleEndIndex = beginDocMatch.index + beginDocMatch[0].length;
+    const preamble = latexCode.slice(0, preambleEndIndex);
+    blocks.push({ type: 'preamble', content: preamble });
+    latexCode = latexCode.slice(preambleEndIndex); // on ne garde que le reste pour parsing
+  }
+
   const pattern = new RegExp(
     String.raw`\\begin\{((?!${exceptions.join('|')})[^}]+)\}(.*?)\\end\{\1\}`,
     'gs'
   );
 
-  let lastIndex = 0; 
+  let lastIndex = 0;
   let match;
 
   while ((match = pattern.exec(latexCode)) !== null) {
@@ -320,6 +332,7 @@ function parseLatexBlocks(latexCode) {
       blocks.push({ type: 'plain', content: plainText });
     }
   }
+
   return blocks;
 }
 
@@ -370,7 +383,6 @@ async function processBlockAPI(apiKey, text, action) {
    PROCESS (CORRIGER/TRADUIRE) avec RUN-ID
    ------------------------------------------------------------ */
 async function processLatex(action) {
-  // On incrémente l'id global pour invalider l'ancien run
   const localRunId = ++globalRunId;
   stopRequested = false;
 
@@ -398,8 +410,11 @@ async function processLatex(action) {
   let finalText = "";
 
   try {
+    if (blocks.length && blocks[0].type === 'preamble') {
+      finalText = blocks[0].content + "\n\n";
+      blocks.shift(); // retirer le préambule du tableau
+    }
     for (const block of blocks) {
-      // Vérification avant même d'appeler l'API
       if (stopRequested || localRunId !== globalRunId) {
         break;
       }
@@ -411,8 +426,6 @@ async function processLatex(action) {
         result = `\\textbf{Erreur : ${err.message}}\n\\textbf{Contenu original :}\n${block.content}`;
       }
 
-      // Juste après la réponse
-      // => vérifier si on a "Stop" ou un nouveau run
       if (stopRequested || localRunId !== globalRunId) {
         break;
       }
@@ -425,15 +438,13 @@ async function processLatex(action) {
         textToInsert = `\\begin{${block.env}}${leadingNL}${result}\n\\end{${block.env}}`;
       }
 
-      const scrollInfo = editorRight.getScrollInfo();
       finalText += textToInsert + "\n\n";
       editorRight.setValue(finalText);
-      editorRight.scrollTo(scrollInfo.left, scrollInfo.top);
+      editorRight.scrollTo(0, editorRight.getScrollInfo().top);
 
       processedBlocks++;
       updateProgress();
 
-      // Petite pause entre chaque bloc
       await new Promise(r => setTimeout(r, 500));
     }
   } finally {
