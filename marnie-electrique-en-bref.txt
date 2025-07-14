@@ -1,14 +1,12 @@
 Comment utiliser :
 
-** Il faut évidemment relire le texte modifié.
-
-** C’est rare, mais il est parfois possible que GPT avale du texte, il faut donc toujours garder une copie du document initial
-
-** Le bouton "Correction" corrige le texte. En appuyant sur le bouton "différence", un discheck permet de voir les modifications effectués.
+** Le bouton "Correction" corrige le texte.
 
 ** Le bonton "Thème (F>A)" traduit du français en anglais.
 
 ** Le bouton "Version (A>F)" traduit de l'anglais en français.
+
+** En appuyant sur le bouton "différence", un diffchecker permet de voir les modifications effectués.
 
 
 
