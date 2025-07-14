@@ -438,9 +438,10 @@ async function processLatex(action) {
         textToInsert = `\\begin{${block.env}}${leadingNL}${result}\n\\end{${block.env}}`;
       }
 
+      const scrollInfo = editorRight.getScrollInfo();
       finalText += textToInsert + "\n\n";
       editorRight.setValue(finalText);
-      editorRight.scrollTo(0, editorRight.getScrollInfo().top);
+      editorRight.scrollTo(scrollInfo.left, scrollInfo.top);
 
       processedBlocks++;
       updateProgress();
