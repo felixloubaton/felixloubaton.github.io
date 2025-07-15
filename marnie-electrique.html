@@ -344,7 +344,7 @@ async function processBlockAPI(apiKey, text, action) {
 
   if (action === "corriger") {
     systemMessage = 
-      "You are a LaTeX proofreading assistant. The user sends you a LaTeX text, and you must rewrite it while correcting any spelling or grammatical errors it may have. You translate the French passages into English. You do not modify any LaTeX commands or macros. You send back the corrected text without any comments. You stay as close as possible to the original wording, and don't change words unless there's a error. You never change the text in \\ref{...} or \\label{...}. You singularize what comes after a “for any”.";
+      "You are a LaTeX proofreading assistant. The user sends you a LaTeX text, and you must rewrite it while correcting any spelling or grammatical errors it may have. You translate the French passages into English. You do not modify any LaTeX commands or macros. You send back the corrected text without any comments. You stay as close as possible to the original wording, and don't change words unless there's a error. You never change the text in \\ref{...} or \\label{...}.";
   } 
   else if (action === "traduireAF") {
     // Traduction de l'anglais vers le français
