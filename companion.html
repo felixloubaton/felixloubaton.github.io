@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>companion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    body{
+      margin:0; padding:0;
+      font-family:sans-serif;
+      background:#fff; color:#000;
+    }
+    .main-container{
+      max-width:1800px;
+      margin:0 auto;
+      padding:20px;
+    }
+
+    .section-title{
+      font-size:1.1em;
+      font-weight:bold;
+      margin-bottom:8px;
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .hint{
+      font-size:0.9em;
+      opacity:0.65;
+      font-weight:normal;
+      white-space:nowrap;
+    }
+
+    .input-row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .input-box{
+      display:flex;
+      align-items:center;
+      border:2px solid #000;
+      height:42px;
+      box-sizing:border-box;
+      width:min(180px,100%);
+    }
+    .bracket{
+      padding:0 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size:15px;
+      user-select:none;
+    }
+    .bracket-input{
+      border:none;
+      outline:none;
+      flex:1;
+      height:100%;
+      padding:0 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size:15px;
+      min-width:100px;
+      text-align:left;
+    }
+    .cat-suffix{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size:15px;
+      user-select:none;
+    }
+
+    .actions{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .actions button{
+      background:#000;
+      color:#fff;
+      border:2px solid #000 !important;
+      padding:0.5em 1.1em;
+      cursor:pointer;
+      font-size:1em;
+    }
+    .actions button:hover{ background:#333; }
+
+    .checkbox{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:0.95em;
+    }
+    .status{
+      font-size:0.9em;
+      opacity:0.75;
+    }
+
+    .result-header{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      margin-top:8px;
+      margin-bottom:4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size:14px;
+      font-weight:bold;
+    }
+    .result-header div{ padding:4px 10px; }
+
+    .result-box{
+      border:2px solid #000;
+      height:70vh;
+      overflow:auto;
+      box-sizing:border-box;
+    }
+    table.companion{
+      width:100%;
+      border-collapse:collapse;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size:14px;
+    }
+    table.companion td{
+      border:1px solid #000;
+      padding:8px 10px;
+      vertical-align:top;
+      white-space:nowrap;
+    }
+
+    .exp{
+      color:#c00;
+      font-style:italic;
+      font-size:0.78em;
+      vertical-align:super;
+      margin-left:1px;
+    }
+
+    .error{
+      padding:12px 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size:14px;
+      white-space:pre-wrap;
+    }
+
+    @media (max-width:800px){
+      .result-box{ height:55vh; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="main-container">
+
+  <div class="section-title">
+  </div>
+
+  <div class="input-row">
+    <div class="input-box">
+      <span class="bracket">[</span>
+      <input id="signature" class="bracket-input"
+             type="text" placeholder="1,2,3"
+             autocomplete="off" spellcheck="false">
+      <span class="bracket">]</span>
+    </div>
+    <span class="cat-suffix">-Cat</span>
+
+    <div class="actions">
+      <button id="btn-run">compute</button>
+      <label class="checkbox">
+        <input type="checkbox" id="hideG"> Hide globular path
+      </label>
+      <span id="status" class="status"></span>
+    </div>
+  </div>
+
+  <div class="result-header">
+    <div>Cells</div>
+    <div>Companions</div>
+  </div>
+
+  <div id="output" class="result-box"></div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+
+<script>
+  const sigInput = document.getElementById("signature");
+
+  // ✅ CORRIGÉ : \s (pas \\s)
+  sigInput.addEventListener("input", () => {
+    sigInput.value = sigInput.value.replace(/[^0-9,\s-]/g, "");
+  });
+
+  function parseSignature(){
+    const txt = sigInput.value.trim();
+    if (!txt) return [];
+
+    // plus robuste : ignore les entrées vides
+    const parts = txt.split(",").map(s => s.trim()).filter(s => s.length > 0);
+
+    return parts.map(s => {
+      // ✅ CORRIGÉ : \d (pas \\d)
+      if (!/^-?\d+$/.test(s)) {
+        throw new Error("Entrée invalide : entiers séparés par des virgules.");
+      }
+      return parseInt(s, 10);
+    });
+  }
+
+  function strTable(a){ return a.map(String).join(""); }
+
+  function formatCell(block, hide){
+    const a = strTable(block[0]);
+    const s = strTable(block[1]);
+    return hide ? a : `${a}<span class="exp">${s}</span>`;
+  }
+
+  function renderCompanion(t){
+    const hide = document.getElementById("hideG").checked;
+    const table = document.createElement("table");
+    table.className = "companion";
+    const tbody = document.createElement("tbody");
+
+    t.forEach(([L,R]) => {
+      const tr = document.createElement("tr");
+      const tdL = document.createElement("td");
+      const tdR = document.createElement("td");
+      tdL.innerHTML = formatCell(L, hide);
+      tdR.innerHTML = formatCell(R, hide);
+      tr.appendChild(tdL);
+      tr.appendChild(tdR);
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    return table;
+  }
+
+  let pyodideReady = null, lastResult = null;
+
+  async function initPyodide(){
+    document.getElementById("status").textContent = "Chargement…";
+    const py = await loadPyodide();
+    await py.runPythonAsync(PY_CODE);
+    document.getElementById("status").textContent = "Prêt.";
+    return py;
+  }
+
+  function rerender(){
+    if (!lastResult) return;
+    const out = document.getElementById("output");
+    out.innerHTML = "";
+    out.appendChild(renderCompanion(lastResult));
+  }
+  document.getElementById("hideG").addEventListener("change", rerender);
+
+  document.getElementById("btn-run").onclick = async () => {
+    const status = document.getElementById("status");
+    const out = document.getElementById("output");
+    out.innerHTML = "";
+    try{
+      const sig = parseSignature();
+      if (!pyodideReady) pyodideReady = initPyodide();
+      const py = await pyodideReady;
+      py.globals.set("signature_js", sig);
+      status.textContent = "Calcul…";
+      lastResult = py.runPython(`
+signature = list(signature_js)
+companion(signature)
+      `).toJs({create_proxies:false});
+      rerender();
+      status.textContent = "Terminé.";
+    }catch(e){
+      status.textContent = "Erreur";
+      const d = document.createElement("div");
+      d.className = "error";
+      d.textContent = e.message || String(e);
+      out.appendChild(d);
+    }
+  };
+
+  const PY_CODE = `
+
+def add_table (x,l):
+    r=[]
+    for i in range(len(x)):
+        r+=[x[0][i]+l[0][i]]
+    return [r,x[1]+l[1]] 
+
+def shift (x,t):
+    r=[]
+    for i in range(len(t)):
+        r+= [[add_table(x,t[i][0]),add_table(x,t[i][1])]]
+    return r
+    
+    
+def companion_initialbis(s):
+    comp_list = [[[[0,1],[1]],[[1,0],[0]]]]
+    [n,k]=s
+    if (n==1) & (k>1):
+        comp_list+= shift([[0,1],[1]],companion_initial([n,k-1]))
+    if (n>1) & (k==1):
+        comp_list+= shift([[1,0],[0]],companion_initial([n-1,k]))
+    if (n>1) & (k>1):
+        comp_list+= shift([[0,1],[1]],companion_initial([n,k-1]))
+        comp_list+= shift([[1,0],[0]],companion_initial([n-1,k]))
+    return comp_list
+
+
+
+
+def companion_initial_n_equal_1(s):
+    comp_list = [[[[0,1],[1]],[[1,0],[0]]]]
+    [n,k]=s
+    if (n!=1):
+        print("error")
+    if (n==1) & (k>1):
+        comp_list+= shift([[0,1],[1]],companion_initial([n,k-1]))
+    return comp_list
+    
+def companion_initial(s):
+    [n,k]=s
+    if (n==1):
+        return companion_initial_n_equal_1(s)
+    if n>1:
+        return companion_initial_n_equal_1([1,k])+shift([[1,0],[0]],companion_initial([n-1,k]))
+
+def conc(k, x):
+    r=[]
+    for i in range(len(x)):
+        [[a_0,s_0],[a_1,s_1]]=x[i]
+        a_0= [k]+a_0
+        s_0=[0 for l in range(k)]+[s_0[l]+1 for l in range(len(s_0))]
+        a_1=[k]+a_1
+        s_1=[0 for l in range(k)]+[s_1[l]+1 for l in range(len(s_1))]
+        r+=[[[a_0,s_0],[a_1,s_1]]]
+    return r
+
+def companion_case_1(s):
+    r =[]
+    if len(s)==2:
+        r+= companion_initial(s)
+    if len(s)>2:
+        r2 = companion_case_1(s[1:])
+        for i in range(s[0]+1):
+            r+= conc(i,r2)
+    return r
+    
+def fragment_intermediaire(r,p):
+    [a,s]=r
+    a+=[max(a[len(a)-1]-p,0)]
+    a[len(a)-2]=min(a[len(a)-2],p)
+    incr=0
+    for i in range(len(s)):
+        if (s[i]==len(a)-2):
+            incr+=1
+        if (s[i]==len(a)-2)& (incr>p):
+            s[i]+=1
+    return [a,s]
+    
+
+def fragment(p,s): 
+    s2=[s[i] for i in range(len(s)-2)]
+    s2+=[p+s[len(s)-1]]
+    r=companion(s2)
+    for i in range(len(r)):
+        r[i]= [fragment_intermediaire(r[i][0],p),fragment_intermediaire(r[i][1],p)]
+    return r 
+
+
+
+def companion(s):
+    if len(s)==2:
+        return companion_initial(s)
+    r= companion_case_1(s)
+    for i in range(s[len(s)-1]+1):
+            r+=fragment(i,s)
+    return r
+`;
+</script>
+</body>
+</html>
