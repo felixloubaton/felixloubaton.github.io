@@ -1,0 +1,128 @@
+# How to use: 
+# the function companion take for an entry a signature in the form of an arraw (eg: [1,2,3]). It return an arraw corresponding to the table of companion. 
+# To display the companion table in a more friendly wat, use the functor  print table.
+
+# Example:
+# print_table(companiont([1,2,3])
+
+
+# Display function
+
+
+def str_table(t):
+    r=""
+    for i in range(len(t)):
+        r+=str(t[i])
+    return r
+
+def format_1 (s):
+    return str_table(s[0])+" g:"+str_table(s[1])
+
+def format_2(s):
+    return (format_1(s[0])+"  | "+format_1(s[1]))
+    
+def print_table(t):
+    for i in range(len(t)):
+        print (format_2(t[i]))
+        
+        
+# computation
+
+def add_table (x,l):
+    r=[]
+    for i in range(len(x)):
+        r+=[x[0][i]+l[0][i]]
+    return [r,x[1]+l[1]] 
+
+def shift (x,t):
+    r=[]
+    for i in range(len(t)):
+        r+= [[add_table(x,t[i][0]),add_table(x,t[i][1])]]
+    return r
+    
+    
+def companion_initialbis(s):
+    comp_list = [[[[0,1],[1]],[[1,0],[0]]]]
+    [n,k]=s
+    if (n==1) & (k>1):
+        comp_list+= shift([[0,1],[1]],companion_initial([n,k-1]))
+    if (n>1) & (k==1):
+        comp_list+= shift([[1,0],[0]],companion_initial([n-1,k]))
+    if (n>1) & (k>1):
+        comp_list+= shift([[0,1],[1]],companion_initial([n,k-1]))
+        comp_list+= shift([[1,0],[0]],companion_initial([n-1,k]))
+    return comp_list
+
+
+
+
+def companion_initial_n_equal_1(s):
+    comp_list = [[[[0,1],[1]],[[1,0],[0]]]]
+    [n,k]=s
+    if (n!=1):
+        print("error")
+    if (n==1) & (k>1):
+        comp_list+= shift([[0,1],[1]],companion_initial([n,k-1]))
+    return comp_list
+    
+def companion_initial(s):
+    [n,k]=s
+    if (n==1):
+        return companion_initial_n_equal_1(s)
+    if n>1:
+        return companion_initial_n_equal_1([1,k])+shift([[1,0],[0]],companion_initial([n-1,k]))
+
+def conc(k, x):
+    r=[]
+    for i in range(len(x)):
+        [[a_0,s_0],[a_1,s_1]]=x[i]
+        a_0= [k]+a_0
+        s_0=[0 for l in range(k)]+[s_0[l]+1 for l in range(len(s_0))]
+        a_1=[k]+a_1
+        s_1=[0 for l in range(k)]+[s_1[l]+1 for l in range(len(s_1))]
+        r+=[[[a_0,s_0],[a_1,s_1]]]
+    return r
+
+def companion_case_1(s):
+    r =[]
+    if len(s)==2:
+        r+= companion_initial(s)
+    if len(s)>2:
+        r2 = companion_case_1(s[1:])
+        for i in range(s[0]+1):
+            r+= conc(i,r2)
+    return r
+    
+def fragment_intermediaire(r,p):
+    [a,s]=r
+    a+=[max(a[len(a)-1]-p,0)]
+    a[len(a)-2]=min(a[len(a)-2],p)
+    incr=0
+    for i in range(len(s)):
+        if (s[i]==len(a)-2):
+            incr+=1
+        if (s[i]==len(a)-2)& (incr>p):
+            s[i]+=1
+    return [a,s]
+    
+
+def fragment(p,s): 
+    s2=[s[i] for i in range(len(s)-2)]
+    s2+=[p+s[len(s)-1]]
+    r=companion(s2)
+    for i in range(len(r)):
+        r[i]= [fragment_intermediaire(r[i][0],p),fragment_intermediaire(r[i][1],p)]
+    return r 
+
+
+
+def companion(s):
+    if len(s)==2:
+        return companion_initial(s)
+    r= companion_case_1(s)
+    for i in range(s[len(s)-1]+1):
+            r+=fragment(i,s)
+    return r
+
+
+
