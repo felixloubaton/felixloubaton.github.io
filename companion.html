@@ -16,6 +16,35 @@
       margin:0 auto;
       padding:20px;
     }
+    .light-grey {
+      color: #000; 
+      font-size: 16px;
+      text-align: right;
+      margin-right: 30px;
+      margin-bottom: 20px;
+    }
+    a:link {
+  color: black;
+  background-color: transparent;
+  text-decoration: none;
+    }
+    a:visited {
+  color: black;
+  background-color: transparent;
+  text-decoration: none;
+    }
+
+    a:hover {
+      color: black;
+      background-color: transparent;
+      text-decoration: underline;
+    }
+
+    a:active {
+      color: black;
+      background-color: transparent;
+      text-decoration: underline;
+}
 
     .section-title{
       font-size:1.1em;
@@ -179,17 +208,19 @@
     <div>Cells</div>
     <div>Companions</div>
   </div>
-
   <div id="output" class="result-box"></div>
-
+    <p class="light-grey">
+    <a href="https://felixloubaton.github.io/companion.txt" target="_blank" style="color #000"> <u><b>Python code</b></u></a></p>
 </div>
+
+
+
 
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
 
 <script>
   const sigInput = document.getElementById("signature");
 
-  // ✅ CORRIGÉ : \s (pas \\s)
   sigInput.addEventListener("input", () => {
     sigInput.value = sigInput.value.replace(/[^0-9,\s-]/g, "");
   });
@@ -198,11 +229,9 @@
     const txt = sigInput.value.trim();
     if (!txt) return [];
 
-    // plus robuste : ignore les entrées vides
     const parts = txt.split(",").map(s => s.trim()).filter(s => s.length > 0);
 
     return parts.map(s => {
-      // ✅ CORRIGÉ : \d (pas \\d)
       if (!/^-?\d+$/.test(s)) {
         throw new Error("Entrée invalide : entiers séparés par des virgules.");
       }
@@ -280,6 +309,7 @@ companion(signature)
       d.textContent = e.message || String(e);
       out.appendChild(d);
     }
+
   };
 
   const PY_CODE = `
